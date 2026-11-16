@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Teacher Login{% endblock %}
+{% block content %}
+<h1>Subject Teacher Portal Login</h1>
+<p class="muted">Sign in to manage class sections, take multi-face attendance, and finalize reports.</p>
+<div class="grid two">
+  <form method="post" class="panel">
+    <h2>Teacher Sign In</h2>
+    <input type="hidden" name="action" value="login">
+    <label>Username<input name="username" placeholder="e.g., teacher" required></label>
+    <label style="margin-top:12px;">Password<input type="password" name="password" placeholder="••••••••" required></label>
+    <div class="actions">
+      <button class="btn" type="submit">Login as Teacher</button>
+    </div>
+    <p class="muted" style="font-size:13px; margin-top:12px;">Default Demo Login: <code>teacher</code> / <code>teacher123</code></p>
+  </form>
+
+  <form method="post" class="panel">
+    <h2>Create New Teacher Account</h2>
+    <input type="hidden" name="action" value="register">
+    <label>Full Name<input name="full_name" placeholder="Dr. / Prof. Name" required></label>
+    <label style="margin-top:10px;">Username<input name="username" required></label>
+    <label style="margin-top:10px;">Password<input type="password" name="password" required></label>
+    <label style="margin-top:10px;">Department Staff Code<input name="access_code" placeholder="Default: KUCET2026" required></label>
+    <div class="actions">
+      <button class="btn secondary" type="submit">Register Teacher</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

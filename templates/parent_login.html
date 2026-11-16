@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Parent Login{% endblock %}
+{% block content %}
+<h1>Parent Portal Login</h1>
+<p class="muted">Log in with your parent credentials to monitor your ward's attendance and risk status.</p>
+<div class="grid two">
+  <form method="post" class="panel">
+    <h2>Parent Sign In</h2>
+    <input type="hidden" name="action" value="login">
+    <label>Parent Username<input name="username" required></label>
+    <label style="margin-top:12px;">Password<input type="password" name="password" required></label>
+    <div class="actions">
+      <button class="btn" type="submit">Login as Parent</button>
+    </div>
+  </form>
+
+  <form method="post" class="panel">
+    <h2>First-Time Parent Activation</h2>
+    <input type="hidden" name="action" value="register">
+    <label>Student Roll Number / ID<input name="student_id" required></label>
+    <label style="margin-top:10px;">Registered Parent Mobile<input name="parent_mobile" placeholder="10-digit mobile" required></label>
+    <label style="margin-top:10px;">Choose Username<input name="username" required></label>
+    <label style="margin-top:10px;">Choose Password<input type="password" name="password" required></label>
+    <div class="actions">
+      <button class="btn secondary" type="submit">Activate Parent Account</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Multi-Face Attendance{% endblock %}
+{% block content %}
+<h1>Multi-Face Classroom Attendance</h1>
+<p class="muted">
+  Subject: <strong>{{ session.subject }}</strong> · {{ session.department }} - <strong>Section {{ session.section }}</strong>
+  · {{ session.session_date }} ({{ session.session_time }})
+</p>
+
+{% if not session.is_finalized %}
+<section class="panel camera-box">
+  <div class="video-wrapper">
+    <video id="camera" autoplay playsinline muted></video>
+    <canvas id="overlayCanvas"></canvas>
+  </div>
+  <canvas id="captureCanvas" hidden></canvas>
+  <div class="actions">
+    <button class="btn secondary" type="button" data-camera-start>Start Camera</button>
+    <button class="btn" type="button" id="recognizeButton"
+            data-recognize-url="{{ url_for('api_recognize', session_id=session.session_id) }}">
+      Scan All Faces & Mark Present
+    </button>
+  </div>
+  <p id="cameraStatus" class="muted">Position multiple students in the camera frame and click Scan All Faces.</p>
+  <div id="recognitionResult" class="result"></div>
+</section>
+{% else %}
+<div class="notice success">
+  This session has been finalized. Absentee WhatsApp notifications have been triggered.
+</div>
+{% endif %}
+
+<section class="panel">
+  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+    <h2>Section {{ session.section }} Attendance Roster ({{ roster|length }} Students)</h2>
+    {% if not session.is_finalized %}
+    <form method="post" action="{{ url_for('finalize_session', session_id=session.session_id) }}"
+          onsubmit="return confirm('Finalize attendance? Unmarked students will be marked ABSENT and WhatsApp alerts will be sent to their parents.');">
+      <button class="btn danger" type="submit">Finalize Attendance & Send WhatsApp Alerts</button>
+    </form>
+    {% endif %}
+  </div>
+
+  {% if roster %}
+  <div class="table-wrap">
+    <table>
+      <tr><th>Student ID</th><th>Name</th><th>Status</th><th>Marked At</th>{% if not session.is_finalized %}<th>Manual Override</th>{% endif %}</tr>
+      {% for r in roster %}
+      <tr>
+        <td>{{ r.student_id }}</td>
+        <td>{{ r.name }}</td>
+        <td>
+          <span class="badge {{ 'present' if r.status == 'Present' else 'absent' }}">{{ r.status }}</span>
+        </td>
+        <td>{{ r.marked_at or '-' }}</td>
+        {% if not session.is_finalized %}
+        <td>
+          <form method="post" action="{{ url_for('toggle_attendance', session_id=session.session_id, student_id=r.student_id) }}">
+            <button type="submit" class="btn secondary small">
+              Mark {{ 'Absent' if r.status == 'Present' else 'Present' }}
+            </button>
+          </form>
+        </td>
+        {% endif %}
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+  {% else %}
+  <p class="muted">No students registered in Section {{ session.section }} yet.</p>
+  {% endif %}
+</section>
+
+<div class="actions">
+  <a class="btn secondary" href="{{ url_for('teacher') }}">Back to Teacher Portal</a>
+  <a class="btn" href="{{ url_for('export_session', session_id=session.session_id) }}">Download Excel Report</a>
+</div>
+{% endblock %}

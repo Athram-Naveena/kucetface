@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: kucet-face-attendance
+    runtime: python
+    buildCommand: pip install -r requirements.txt && python download_models.py
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: SECRET_KEY
+        generateValue: true
+      - key: TEACHER_SIGNUP_CODE
+        value: KUCET2026
+      - key: TWILIO_ACCOUNT_SID
+        sync: false
+      - key: TWILIO_AUTH_TOKEN
+        sync: false
+      - key: TWILIO_WHATSAPP_FROM
+        value: whatsapp:+14155238886

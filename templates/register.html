@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Add Student{% endblock %}
+{% block content %}
+<h1>Add / Register Student</h1>
+<p class="muted">Assign the student to a section, capture a clear face image, and optionally create parent login credentials.</p>
+<form method="post" class="panel" id="registerForm">
+  <div class="grid two">
+    <label>Student ID / Roll No<input name="student_id" required></label>
+    <label>Student Name<input name="name" required></label>
+    <label>Department<input name="department" value="ECE" required></label>
+    <label>Class Section
+      <select name="section" required>
+        <option value="A">Section A</option>
+        <option value="B">Section B</option>
+        <option value="C">Section C</option>
+        <option value="D">Section D</option>
+      </select>
+    </label>
+    <label>Parent Name<input name="parent_name"></label>
+    <label>Parent WhatsApp Mobile<input name="parent_mobile" placeholder="e.g., 9876543210" required></label>
+    <label>Parent Login Username (Optional)<input name="parent_username" placeholder="Auto-create parent login"></label>
+    <label>Parent Login Password (Optional)<input type="password" name="parent_password" placeholder="Set parent password"></label>
+  </div>
+  <div class="camera-box">
+    <video id="camera" autoplay playsinline muted></video>
+    <canvas id="captureCanvas" hidden></canvas>
+    <input type="hidden" name="face_image" id="faceImage">
+    <div class="actions">
+      <button type="button" class="btn secondary" data-camera-start>Start Camera</button>
+      <button type="button" class="btn" data-camera-capture>Capture Face</button>
+    </div>
+    <p id="cameraStatus" class="muted">Allow camera access when prompted.</p>
+  </div>
+  <button class="btn" type="submit">Save Student</button>
+</form>
+{% endblock %}

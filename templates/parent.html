@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Parent Dashboard{% endblock %}
+{% block content %}
+<h1>Parent Attendance Dashboard</h1>
+<p class="muted">Ward: <strong>{{ selected.name }}</strong> ({{ selected.student_id }}) · Dept: {{ selected.department }} · Section: <strong>{{ selected.section }}</strong></p>
+
+<section class="cards">
+  <div class="card"><span>Total Classes</span><strong>{{ summary.total }}</strong></div>
+  <div class="card"><span>Present</span><strong>{{ summary.present }}</strong></div>
+  <div class="card"><span>Absent</span><strong>{{ summary.absent }}</strong></div>
+  <div class="card"><span>Attendance %</span><strong>{{ summary.percentage }}%</strong></div>
+</section>
+
+<div class="notice {{ 'warning' if summary.risk else 'success' }}">
+  {% if summary.risk %}
+    <strong>Low Attendance Alert:</strong> Attendance is below 75%. WhatsApp notifications are enabled on <strong>{{ selected.parent_mobile or 'N/A' }}</strong>.
+  {% else %}
+    <strong>Good Standing:</strong> Attendance is at or above 75%. WhatsApp alerts are active for <strong>{{ selected.parent_mobile or 'N/A' }}</strong>.
+  {% endif %}
+</div>
+
+<section class="panel">
+  <h2>Subject-wise Attendance</h2>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Subject</th><th>Total Sessions</th><th>Present</th><th>Percentage</th></tr>
+      {% for row in subjects %}
+        {% set pct = (row.present or 0) / row.total * 100 if row.total else 0 %}
+        <tr>
+          <td>{{ row.subject }}</td>
+          <td>{{ row.total }}</td>
+          <td>{{ row.present or 0 }}</td>
+          <td>{{ "%.1f"|format(pct) }}%</td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>Recent Class Logs</h2>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Date</th><th>Time</th><th>Subject</th><th>Status</th></tr>
+      {% for log in recent_logs %}
+        <tr>
+          <td>{{ log.session_date }}</td>
+          <td>{{ log.session_time }}</td>
+          <td>{{ log.subject }}</td>
+          <td>
+            <span class="badge {{ 'present' if log.status == 'Present' else 'absent' }}">{{ log.status }}</span>
+          </td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+</section>
+{% endblock %}
